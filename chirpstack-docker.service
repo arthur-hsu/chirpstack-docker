@@ -1,0 +1,17 @@
+[Unit]
+Description=chirpstack Docker Compose Application Service
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=simple
+WorkingDirectory=/home/rak/chirpstack-docker
+ExecStart=docker-compose up -d
+ExecStop=docker-compose down
+RemainAfterExit=yes
+TimeoutStartSec=0
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
