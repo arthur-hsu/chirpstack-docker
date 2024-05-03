@@ -43,6 +43,7 @@ cat << EOF | tee -a mqtt-server.json
 }
 EOF
 cfssl gencert -ca ca.pem -ca-key ca-key.pem -config ca-config.json -profile server mqtt-server.json | cfssljson -bare mqtt-server
+
 chirpstack_toml="./configuration/chirpstack/chirpstack.toml"
 if grep -q "you-must-replace-this" ${chirpstack_toml}; then
     secret=$(openssl rand -base64 32)
@@ -51,32 +52,34 @@ else
     echo "Skip secret key replacement"
 fi
 
-if grep -q "\[gateway\]" ${chirpstack_toml}; then
-    echo "Skip MQTT Gateway TLS configuration"
-else
-    cat << EOF | tee -a ${chirpstack_toml}
-[gateway]
-client_cert_lifetime="12months"
-ca_cert="/etc/chirpstack/certs/ca.pem"
-ca_key="/etc/chirpstack/certs/ca-key.pem"
-EOF
-    echo "MQTT Gateway TLS configuration added"
-fi
+# if grep -q "\[gateway\]" ${chirpstack_toml}; then
+#     echo "Skip MQTT Gateway TLS configuration"
+# else
+#     cat << EOF | tee -a ${chirpstack_toml}
+# [gateway]
+# client_cert_lifetime="12months"
+# ca_cert="/etc/chirpstack/certs/ca.pem"
+# ca_key="/etc/chirpstack/certs/ca-key.pem"
+# EOF
+#     echo "MQTT Gateway TLS configuration added"
+# fi
 
-if grep -q "\[integration.mqtt.client\]" ${chirpstack_toml}; then
-    echo "Skip MQTT Network Server TLS configuration"
-else
-    cat << EOF | tee -a ${chirpstack_toml}
-[integration.mqtt.client]
-client_cert_lifetime="12months"
-ca_cert="/etc/chirpstack/certs/ca.pem"
-ca_key="/etc/chirpstack/certs/ca-key.pem"
-EOF
-    echo "MQTT Network Server TLS configuration added"
-fi
+# if grep -q "\[integration.mqtt.client\]" ${chirpstack_toml}; then
+#     echo "Skip MQTT Network Server TLS configuration"
+# else
+#     cat << EOF | tee -a ${chirpstack_toml}
+# [integration.mqtt.client]
+# client_cert_lifetime="12months"
+# ca_cert="/etc/chirpstack/certs/ca.pem"
+# ca_key="/etc/chirpstack/certs/ca-key.pem"
+# EOF
+#     echo "MQTT Network Server TLS configuration added"
+# fi
+#
 chirpstack_dir="./configuration/chirpstack"
 mkdir -p "${chirpstack_dir}/certs"
 cp -r ca*.pem ${chirpstack_dir}/certs
+
 mosquitto_dir="./configuration/mosquitto/config"
 sudo chown -R 1000:1000 ./configuration/mosquitto
 mkdir -p "${mosquitto_dir}/certs"

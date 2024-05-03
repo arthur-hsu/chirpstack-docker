@@ -121,10 +121,18 @@
   #   openssl rand -base64 32
   secret="you-must-replace-this"
 
+[gateway]
+client_cert_lifetime="12months"
+ca_cert="/etc/chirpstack/certs/ca.pem"
+ca_key="/etc/chirpstack/certs/ca-key.pem"
 
 [integration]
   enabled=["mqtt"]
 
   [integration.mqtt]
-    server="tcp://$MQTT_BROKER_HOST:1883/"
-    json=true
+  server="tcp://$MQTT_BROKER_HOST:1883/"
+  json=true
+  [integration.mqtt.client]
+  client_cert_lifetime="12months"
+  ca_cert="/etc/chirpstack/certs/ca.pem"
+  ca_key="/etc/chirpstack/certs/ca-key.pem"

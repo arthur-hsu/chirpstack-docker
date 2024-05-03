@@ -1,5 +1,9 @@
 version: "3"
 
+volumes:
+  postgresqldata:
+  redisdata:
+
 services:
   chirpstack:
     image: chirpstack/chirpstack:4
@@ -28,10 +32,9 @@ services:
     volumes:
       - ./configuration/chirpstack-gateway-bridge/:/etc/chirpstack-gateway-bridge/
     environment:
-      - region=eu868
-      - INTEGRATION__MQTT__EVENT_TOPIC_TEMPLATE=${region}/gateway/{{ .GatewayID }}/event/{{ .EventType }}
-      - INTEGRATION__MQTT__STATE_TOPIC_TEMPLATE=${region}/gateway/{{ .GatewayID }}/state/{{ .StateType }}
-      - INTEGRATION__MQTT__COMMAND_TOPIC_TEMPLATE=${region}/gateway/{{ .GatewayID }}/command/#
+      - INTEGRATION__MQTT__EVENT_TOPIC_TEMPLATE=eu868/gateway/{{ .GatewayID }}/event/{{ .EventType }}
+      - INTEGRATION__MQTT__STATE_TOPIC_TEMPLATE=eu868/gateway/{{ .GatewayID }}/state/{{ .StateType }}
+      - INTEGRATION__MQTT__COMMAND_TOPIC_TEMPLATE=eu868/gateway/{{ .GatewayID }}/command/#
     depends_on:
       - mosquitto
 
@@ -43,12 +46,12 @@ services:
     volumes:
       - ./configuration/chirpstack-gateway-bridge/:/etc/chirpstack-gateway-bridge/
     environment:
-      - region=as923_1
-      - INTEGRATION__MQTT__EVENT_TOPIC_TEMPLATE=${region}/gateway/{{ .GatewayID }}/event/{{ .EventType }}
-      - INTEGRATION__MQTT__STATE_TOPIC_TEMPLATE=${region}/gateway/{{ .GatewayID }}/state/{{ .StateType }}
-      - INTEGRATION__MQTT__COMMAND_TOPIC_TEMPLATE=${region}/gateway/{{ .GatewayID }}/command/#
+      - INTEGRATION__MQTT__EVENT_TOPIC_TEMPLATE=as923_1/gateway/{{ .GatewayID }}/event/{{ .EventType }}
+      - INTEGRATION__MQTT__STATE_TOPIC_TEMPLATE=as923_1/gateway/{{ .GatewayID }}/state/{{ .StateType }}
+      - INTEGRATION__MQTT__COMMAND_TOPIC_TEMPLATE=as923_1/gateway/{{ .GatewayID }}/command/#
     depends_on:
       - mosquitto
+
   au915_1-bridge:
     image: chirpstack/chirpstack-gateway-bridge:4
     restart: unless-stopped
@@ -57,10 +60,9 @@ services:
     volumes:
       - ./configuration/chirpstack-gateway-bridge/:/etc/chirpstack-gateway-bridge/
     environment:
-      - region=au915_1
-      - INTEGRATION__MQTT__EVENT_TOPIC_TEMPLATE=${region}/gateway/{{ .GatewayID }}/event/{{ .EventType }}
-      - INTEGRATION__MQTT__STATE_TOPIC_TEMPLATE=${region}/gateway/{{ .GatewayID }}/state/{{ .StateType }}
-      - INTEGRATION__MQTT__COMMAND_TOPIC_TEMPLATE=${region}/gateway/{{ .GatewayID }}/command/#
+      - INTEGRATION__MQTT__EVENT_TOPIC_TEMPLATE=au915_1/gateway/{{ .GatewayID }}/event/{{ .EventType }}
+      - INTEGRATION__MQTT__STATE_TOPIC_TEMPLATE=au915_1/gateway/{{ .GatewayID }}/state/{{ .StateType }}
+      - INTEGRATION__MQTT__COMMAND_TOPIC_TEMPLATE=au915_1/gateway/{{ .GatewayID }}/command/#
     depends_on:
       - mosquitto
 
@@ -108,6 +110,3 @@ services:
   #     - ./configuration/chirpstack-gateway-bridge:/etc/chirpstack-gateway-bridge
   #   depends_on:
   #     - mosquitto
-volumes:
-  postgresqldata:
-  redisdata:
