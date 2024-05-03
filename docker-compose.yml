@@ -88,6 +88,7 @@ services:
     restart: unless-stopped
     ports:
       - 1883:1883
+      - 8883:8883
     volumes: 
       - ./configuration/mosquitto/config/:/mosquitto/config/
 
