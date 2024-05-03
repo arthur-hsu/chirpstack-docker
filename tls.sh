@@ -75,7 +75,7 @@ fi
 # EOF
 #     echo "MQTT Network Server TLS configuration added"
 # fi
-#
+
 chirpstack_dir="./configuration/chirpstack"
 mkdir -p "${chirpstack_dir}/certs"
 cp -r ca*.pem ${chirpstack_dir}/certs
