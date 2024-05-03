@@ -7,5 +7,3 @@
 /lorawan-devices
 **/certs
 
-configuration/chirpstack/chirpstack.toml
-configuration/mosquitto/config/mosquitto.conf
