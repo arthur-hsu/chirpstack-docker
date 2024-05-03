@@ -79,11 +79,13 @@ fi
 chirpstack_dir="./configuration/chirpstack"
 mkdir -p "${chirpstack_dir}/certs"
 cp -r ca*.pem ${chirpstack_dir}/certs
+chmod -R 777 "${chirpstack_dir}/certs"
 
 mosquitto_dir="./configuration/mosquitto/config"
 sudo chown -R 1000:1000 ./configuration/mosquitto
 mkdir -p "${mosquitto_dir}/certs"
 cp -r ca.pem mqtt-server-key.pem mqtt-server.pem "${mosquitto_dir}/certs"
+chmod -R 777 "${mosquitto_dir}/certs"
 
 if [ -e "${mosquitto_dir}/acl" ]; then
     echo "Skip ACL configuration"
@@ -99,8 +101,9 @@ fi
 if grep -q "listener 8883 0.0.0.0" "${mosquitto_dir}/mosquitto.conf"; then
     echo "Skip MQTT TLS configuration"
 else
+    sed -i "1 i per_listener_settings true" "${mosquitto_dir}/mosquitto.conf"
     cat << EOF | tee -a "${mosquitto_dir}/mosquitto.conf"
-per_listener_settings true
+
 listener 8883 0.0.0.0
 cafile /mosquitto/config/certs/ca.pem
 certfile /mosquitto/config/certs/mqtt-server.pem
