@@ -100,6 +100,7 @@ if grep -q "listener 8883 0.0.0.0" "${mosquitto_dir}/mosquitto.conf"; then
     echo "Skip MQTT TLS configuration"
 else
     cat << EOF | tee -a "${mosquitto_dir}/mosquitto.conf"
+per_listener_settings true
 listener 8883 0.0.0.0
 cafile /mosquitto/config/certs/ca.pem
 certfile /mosquitto/config/certs/mqtt-server.pem
