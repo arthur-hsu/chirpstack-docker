@@ -78,6 +78,7 @@ chirpstack_dir="./configuration/chirpstack"
 mkdir -p "${chirpstack_dir}/certs"
 cp -r ca*.pem ${chirpstack_dir}/certs
 mosquitto_dir="./configuration/mosquitto/config"
+sudo chown -R 1000:1000 ./configuration/mosquitto
 mkdir -p "${mosquitto_dir}/certs"
 cp -r ca.pem mqtt-server-key.pem mqtt-server.pem "${mosquitto_dir}/certs"
 
@@ -88,6 +89,7 @@ else
 pattern readwrite +/gateway/%u/#
 pattern readwrite application/%u/#
 EOF
+    sudo chmod 700 "${mosquitto_dir}/acl"
     echo "ACL configuration added"
 fi
 
@@ -96,11 +98,11 @@ if grep -q "listener 8883 0.0.0.0" "${mosquitto_dir}/mosquitto.conf"; then
 else
     cat << EOF | tee -a "${mosquitto_dir}/mosquitto.conf"
 listener 8883 0.0.0.0
-cafile /etc/mosquitto/certs/ca.pem
+cafile /mosquitto/config/certs/ca.pem
 certfile /mosquitto/config/certs/mqtt-server.pem
 keyfile /mosquitto/config/certs/mqtt-server-key.pem
-allow_anonymous false
-require_certificate true
+allow_anonymous true
+require_certificate false
 use_identity_as_username true
 acl_file /mosquitto/config/acl
 EOF

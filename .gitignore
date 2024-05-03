@@ -6,4 +6,4 @@
 /data
 /lorawan-devices
 **/certs
-
+configuration/mosquitto/config/acl
